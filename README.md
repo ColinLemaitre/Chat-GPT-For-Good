@@ -1,1 +1,1 @@
-# Chat-GPT-For-Good
+# Chat GPT For Good
