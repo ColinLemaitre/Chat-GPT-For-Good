@@ -1,0 +1,600 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Recherche d’entreprises",
+      "version": "1.0.0",
+      "description": "Rechercher des entreprises, des associations et des administrations en France"
+    },
+    "paths": {
+      "/search": {
+        "get": {
+          "operationId": "rechercheEntreprise",
+          "description": "Rechercher une ou plusieurs entreprises à partir de différents paramètres",
+          "parameters": [
+            {
+              "name": "q",
+              "in": "query",
+              "description": "Termes de la recherche (dénomination et/ou adresse, dirigeants, élus)",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "activite_principale",
+              "in": "query",
+              "description": "Le code d'activité suivant la nomenclature de l'INSEE NAF Révision 2 (NAF Rev 2) formaté avec un point entre les 2 premiers et les 3 derniers caractères. Accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
+              "example": "01.12Z,28.15Z",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "categorie_entreprise",
+              "in": "query",
+              "description": "Catégorie d'entreprise de l'unité légale. Ce paramètre accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
+              "example": "PME,ETI",
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "PME",
+                  "ETI",
+                  "GE"
+                ]
+              }
+            },
+            {
+              "name": "code_collectivite_territoriale",
+              "in": "query",
+              "description": "Code affilié à une collectivité territoriale (Commune - code INSEE, EPCI - n° SIREN, Département - Code INSEE + \"D\", Région - Code INSEE)",
+              "example": "75C",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "convention_collective_renseignee",
+              "in": "query",
+              "description": "Entreprises ayant au moins un établissement dont la convention collective est renseignée",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "code_postal",
+              "in": "query",
+              "description": "Code postal en France en 5 chiffres. Accepte une valeur unique ou une liste de valeurs séparées par des virgules",
+              "example": "38540,38189",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "code_commune",
+              "in": "query",
+              "description": "Code commune français (selon la nomenclature INSEE) en 5 caractères. Accepte une valeur unique ou une liste de valeurs séparées par des virgules",
+              "example": "01247,01111",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "departement",
+              "in": "query",
+              "description": "Code de département français en deux ou trois chiffres. Accepte une valeur unique ou une liste de valeurs séparées par des virgules",
+              "example": "02,89",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "region",
+              "in": "query",
+              "description": "Code de région française en deux chiffres. Accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
+              "example": "11,76",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "egapro_renseignee",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant un index égapro renseigné",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_association",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant un identifiant d'association ou une nature juridique avec mention \"association\" (5195, 9210, 9220, 9221, 9222, 9223, 9224, 9230, 9240, 9260)",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_bio",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant un établissement certifié par l'agence bio",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_collectivite_territoriale",
+              "in": "query",
+              "description": "Uniquement les collectivités territoriales",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_entrepreneur_individuel",
+              "in": "query",
+              "description": "Uniquement les entreprises individuelles",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_entrepreneur_spectacle",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant une licence d'entrepreneur du spectacle",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_ess",
+              "in": "query",
+              "description": "Uniquement les entreprises appartenant au champ de l'économie sociale et solidaire",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_finess",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant un établissement du domaine du sanitaire et social (FINESS)",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_organisme_formation",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant un établissement organisme de formation",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_qualiopi",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant ayant une certification de la marque « Qualiopi »",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_rge",
+              "in": "query",
+              "description": "Uniquement les entreprises reconnues garantes de l'Environnement (RGE).",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_service_public",
+              "in": "query",
+              "description": "Uniquement les structures reconnues comme service public",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_societe_mission",
+              "in": "query",
+              "description": "Uniquement les sociétés qui appartiennent au champ des sociétés à mission",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "est_uai",
+              "in": "query",
+              "description": "Uniquement les entreprises ayant un établissement UAI (Unité Administrative Immatriculée)",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "etat_administratif",
+              "in": "query",
+              "description": "État administratif de l'unité légale. \"A\" pour Active, \"C\" pour Cessée.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "defaut": "A",
+                "enum": [
+                  "A",
+                  "C"
+                ]
+              }
+            },
+            {
+              "name": "id_convention_collective",
+              "in": "query",
+              "description": "Identifiant de Convention Collective d'un établissement d'une entreprise.",
+              "example": "1090",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "id_finess",
+              "in": "query",
+              "description": "Identifiant FINESS d'un établissement d'une entreprise.",
+              "example": "010003853",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "id_rge",
+              "in": "query",
+              "description": "Identifiant RGE (reconnues garantes de l'Environnement) d'un établissement d'une entreprise.",
+              "example": "8611M10D109",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "id_uai",
+              "in": "query",
+              "description": "Identifiant UAI d'un établissement d'une entreprise.",
+              "example": "0022004T",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "nature_juridique",
+              "in": "query",
+              "description": "Catégorie juridique de l'unité légale sous la forme d'un code de 4 chiffres selon la nomenclature l'INSEE. Accepte une valeur unique ou une liste de valeurs séparées par des virgules",
+              "example": "7344,6544",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "section_activite_principale",
+              "in": "query",
+              "description": "Section de\nl'activité principale sous la forme d'1 lettre selon la nomenclature de l'INSEE",
+              "example": "A,J,U",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "tranche_effectif_salarie",
+              "in": "query",
+              "description": "Tranche d'effectif salarié NN si Unités non employeuses (pas de salarié au cours de
+              l'année de référence et pas d'effectif au 31/12), 00 si 0 salarié (n'ayant pas d'effectif au 31/12 mais ayant
+              employé des salariés au cours de l'année de référence),01 si 1 ou 2 salariés, 02 si 3 à 5 salariés, 03 si 6 à 9 salariés, 11 si 10 à 19 salariés, 12 si 20 à 49 salariés, 21 si 50 à 99 salariés, 22 si 100 à 199 salariés, 31 si 200 à 249 salariés
+              32 250 à 499 salariés, 41 si 500 à 999 salariés, 42 si 1000 à 1999 salariés, 51 si 2000 à 4999 salariés, 52 si 5000 à 9999 salariés, 53 si 10000 salariés et plus. Accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
+              "example": "NN,00,01",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "nom_personne",
+              "in": "query",
+              "description": "Nom d'une personne partie prenante de l'entreprise (dirigeant ou élu).",
+              "example": "Dupont",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "prenoms_personne",
+              "in": "query",
+              "description": "Prenom(s) d'une personne partie prenante de l'entreprise (dirigeant ou élu).",
+              "example": "Camille",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "date_naissance_personne_min",
+              "in": "query",
+              "description": "Valeur minimale de la date de naissance d'une personne partie prenante de l'entreprise (dirigeant ou élu).",
+              "example": "1960-01-01",
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            {
+              "name": "date_naissance_personne_max",
+              "in": "query",
+              "description": "Valeur maximale de la date de naissance d'une personne partie prenante de l'entreprise (dirigeant ou élu).",
+              "example": "1990-01-01",
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            {
+              "name": "type_personne",
+              "in": "query",
+              "description": "Type de la partie prenante de l'entreprise, dirigeant ou élu.",
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "dirigeant",
+                  "elu"
+                ]
+              }
+            },
+            {
+              "name": "ca_min",
+              "in": "query",
+              "description": "Valeur minimale du chiffre d'affaire de l'entreprise",
+              "example": "100000",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "ca_max",
+              "in": "query",
+              "description": "Valeur maximale du chiffre d'affaire de l'entreprise",
+              "example": "100000",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "resultat_net_min",
+              "in": "query",
+              "description": "Valeur minimale du résultat net de l'entreprise",
+              "example": "100000",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "resultat_net_max",
+              "in": "query",
+              "description": "Valeur maximale du résultat net de l'entreprise",
+              "example": "100000",
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "limite_matching_etablissements",
+              "in": "query",
+              "description": "Nombre d'établissements connexes inclus dans la réponse (matching_etablissements). Valeur entre 1 et 100.",
+              "schema": {
+                "type": "integer",
+                "default": 10
+              }
+            },
+            {
+              "name": "minimal",
+              "in": "query",
+              "description": "Permet de retourner une réponse minmale, qui exclut les champs secondaires. Voir \"include\" pour en savoir plus.",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "include",
+              "in": "query",
+              "description": "ATTENTION : Ce paramètre ne peut être appelé qu'avec le champs \"minimal=True\".\n\nPermet de ne demander que certains des champs secondaires.\n\nValeurs possibles :\n\n  * complements\n  * dirigeants\n  * finances\n  * matching_etablissements\n  * siege\n\n\nPar défaut tous les champs sont inclus.\n\nCe paramètre accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
+              "example": "siege,complements",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Le numéro de la page à retourner.",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 1
+              }
+            },
+            {
+              "name": "per_page",
+              "in": "query",
+              "description": "Le nombre de résultats par page, limité à 25.",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 25
+              }
+            }
+          ]
+        }
+      },
+      "/near_point": {
+        "get": {
+          "operationId": "rechercheEntrepriseGeo",
+          "description": "Recherche géographique en France. Prend en paramètre une latitude et une longitude et renvoie dans un périmètre indiqué par un paramètre radius en km (défaut: 5, maximum: 50).L'activité principale et la section d'activité principale peuvent être précisées",
+          "parameters": [
+            {
+              "name": "lat",
+              "in": "query",
+              "description": "Latitude de l'établissement",
+              "required": true,
+              "schema": {
+                "type": "number",
+                "format": "float"
+              }
+            },
+            {
+              "name": "long",
+              "in": "query",
+              "description": "Longitude de l'établissement",
+              "required": true,
+              "schema": {
+                "type": "number",
+                "format": "float"
+              }
+            },
+            {
+              "name": "radius",
+              "in": "query",
+              "description": "Radius de recherche, inférieur ou égal à 50km par tranche de 5.",
+              "required": false,
+              "schema": {
+                "type": "number",
+                "format": "float",
+                "default": 5
+              }
+            },
+            {
+              "name": "activite_principale",
+              "in": "query",
+              "description": "Le code d'activité suivant la nomenclature NAF Révision 2 de l'INSEE, avec un point après les 2 premiers caractères. Accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
+              "example": "01.12Z,28.15Z",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "section_activite_principale",
+              "in": "query",
+              "description": "Section de\nl'activité principale sous la forme d'une lettre selon la nomenclature de l'INSEE. Accepte une valeur unique ou une liste de valeurs séparées par des virgules.\n",
+              "example": "A,J,U",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "limite_matching_etablissements",
+              "in": "query",
+              "description": "Nombre d'établissements connexes inclus dans la réponse (matching_etablissements). Valeur entre 1 et 100.",
+              "schema": {
+                "type": "integer",
+                "default": 10
+              }
+            },
+            {
+              "name": "minimal",
+              "in": "query",
+              "description": "Permet de retourner une réponse minmale, qui exclut les champs secondaires",
+              "schema": {
+                "type": "boolean",
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            },
+            {
+              "name": "include",
+              "in": "query",
+              "description": "ATTENTION : Ce paramètre ne peut être appelé qu'avec le champs \"minimal=True\".\n\nPermet de ne demander que certains des champs secondaires.\n\nValeurs possibles :\n\n  * complements\n  * dirigeants\n  * finances\n  * matching_etablissements\n  * siege\n\n\nPar défaut tous les champs sont inclus.\n\nCe paramètre accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
+              "example": "siege,complements",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Le numéro de la page à retourner",
+              "schema": {
+                "type": "integer",
+                "default": 1
+              }
+            },
+            {
+              "name": "per_page",
+              "in": "query",
+              "description": "Le nombre de résultats par page, limité à 25",
+              "schema": {
+                "type": "integer",
+                "default": 25
+              }
+            }
+          ]
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "https://recherche-entreprises.api.gouv.fr"
+      }
+    ]
+  }
