@@ -6,7 +6,7 @@
       "description": "Rechercher des entreprises, des associations et des administrations en France"
     },
     "paths": {
-      "/search": {
+      "/{search}": {
         "get": {
           "operationId": "rechercheEntreprise",
           "description": "Rechercher une ou plusieurs entreprises à partir de différents paramètres",
@@ -338,9 +338,7 @@
             {
               "name": "tranche_effectif_salarie",
               "in": "query",
-              "description": "Tranche d'effectif salarié NN si Unités non employeuses (pas de salarié au cours de
-              l'année de référence et pas d'effectif au 31/12), 00 si 0 salarié (n'ayant pas d'effectif au 31/12 mais ayant
-              employé des salariés au cours de l'année de référence),01 si 1 ou 2 salariés, 02 si 3 à 5 salariés, 03 si 6 à 9 salariés, 11 si 10 à 19 salariés, 12 si 20 à 49 salariés, 21 si 50 à 99 salariés, 22 si 100 à 199 salariés, 31 si 200 à 249 salariés
+              "description": "Tranche d'effectif salarié NN si Unités non employeuses, 00 si 0 salarié (n'ayant pas d'effectif au 31/12 mais ayant employé des salariés au cours de l'année de référence),01 si 1 ou 2 salariés, 02 si 3 à 5 salariés, 03 si 6 à 9 salariés, 11 si 10 à 19 salariés, 12 si 20 à 49 salariés, 21 si 50 à 99 salariés, 22 si 100 à 199 salariés, 31 si 200 à 249 salariés
               32 250 à 499 salariés, 41 si 500 à 999 salariés, 42 si 1000 à 1999 salariés, 51 si 2000 à 4999 salariés, 52 si 5000 à 9999 salariés, 53 si 10000 salariés et plus. Accepte une valeur unique ou une liste de valeurs séparées par des virgules.",
               "example": "NN,00,01",
               "schema": {

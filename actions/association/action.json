@@ -1,0 +1,30 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Association",
+      "version": "1.0.0",
+      "description": "Rechercher des informations complémentaires issues du Registre National des Associations en France"
+    },
+    "paths": {
+      "/{id}": {
+        "get": {
+        "operationId": "infoAssociation",
+        "description": "Obtenir des informations pour une association à partir de son numéro RNA, Siren ou Siret",
+        "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Numéro Siren sur 9 chiffres, numéro RNA ou numéro Siret de l'association",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+        ]
+        }
+      }
+    },
+   "servers": [
+    {"url": "https://siva-integ1.cegedim.cloud/apim/api-asso/api/structure"}
+   ]
+}
